@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Game Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== Top bar (shared) ===== -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">♠</div>
+      <div class="brand-name" id="brandName">Game Hub</div>
+    </div>
+    <div class="topbar-actions">
+      <div class="user-chip">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div class="user-name" id="userNameLabel">Guest</div>
+      </div>
+      <button class="lang-toggle" id="themeToggle" title="Toggle dark mode">🌙</button>
+      <button class="lang-toggle" id="langToggle">FA</button>
+    </div>
+  </div>
+
+  <!-- ===== Screen: Game Hub / Menu ===== -->
+  <section class="screen active" id="screen-hub">
+    <h1 class="page-title" data-i18n="hub_title">Choose a game</h1>
+    <p class="page-sub" data-i18n="hub_sub">Free to play. Invite friends or match with strangers.</p>
+
+    <div class="game-grid">
+      <div class="game-card" id="cardHokm">
+        <span class="badge" data-i18n="badge_free">Free</span>
+        <div class="game-icon">🂡</div>
+        <div class="game-info">
+          <div class="game-title" data-i18n="hokm_title">Hokm</div>
+          <div class="game-desc" data-i18n="hokm_desc">Classic Persian trick-taking card game. 2 or 4 players.</div>
+        </div>
+        <div class="suit-fan">♠</div>
+      </div>
+
+      <div class="game-card" id="cardDice">
+        <span class="badge" data-i18n="badge_free">Free</span>
+        <div class="game-icon">🎲</div>
+        <div class="game-info">
+          <div class="game-title" data-i18n="dice_title">Dice Duel</div>
+          <div class="game-desc" data-i18n="dice_desc">Best of 3 rounds, back-to-back. Highest roll each round wins.</div>
+        </div>
+        <div class="suit-fan">⚄</div>
+      </div>
+
+      <div class="game-card locked">
+        <span class="badge soon" data-i18n="badge_soon">Coming soon</span>
+        <div class="game-icon">🎲</div>
+        <div class="game-info">
+          <div class="game-title" data-i18n="game2_title">Backgammon</div>
+          <div class="game-desc" data-i18n="game2_desc">Roll the dice and race your pieces home.</div>
+        </div>
+      </div>
+
+      <div class="game-card locked">
+        <span class="badge soon" data-i18n="badge_soon">Coming soon</span>
+        <div class="game-icon">♟️</div>
+        <div class="game-info">
+          <div class="game-title" data-i18n="game3_title">Chess</div>
+          <div class="game-desc" data-i18n="game3_desc">1v1 strategy, no luck involved.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Screen: Dice Duel play options ===== -->
+  <section class="screen" id="screen-dice-options">
+    <div class="back-link" data-back="screen-hub">← <span data-i18n="back">Back</span></div>
+    <div class="title-row">
+      <h1 class="page-title" data-i18n="dice_title">Dice Duel</h1>
+      <button class="howto-btn" id="btnHowtoDice">ℹ️ <span data-i18n="howto_btn">How to play</span></button>
+    </div>
+    <p class="page-sub" data-i18n="dice_rules">3 rounds, back to back. Whoever rolls higher wins the round; most rounds won takes the match.</p>
+
+    <div class="play-options">
+      <div class="option-card">
+        <div class="option-title" data-i18n="opt_friends_title">🔗 Play with friends</div>
+        <div class="option-desc" data-i18n="opt_friends_desc">Create a table and share the link in Telegram.</div>
+        <button class="btn btn-primary btn-block" id="btnCreateInviteDice" data-i18n="opt_friends_btn">Create invite link</button>
+        <div class="invite-link-box" id="inviteBoxDice" style="display:none;"></div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-title" data-i18n="opt_random_title">🎲 Play with strangers</div>
+        <div class="option-desc" data-i18n="opt_random_desc">Get matched automatically with online players.</div>
+        <button class="btn btn-secondary btn-block" id="btnRandomDice" data-i18n="opt_random_btn">Find a match</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Screen: Mode select ===== -->
+  <section class="screen" id="screen-mode">
+    <div class="back-link" data-back="screen-hub">← <span data-i18n="back">Back</span></div>
+    <div class="title-row">
+      <h1 class="page-title" data-i18n="mode_title">Hokm</h1>
+      <button class="howto-btn" id="btnHowtoHokm">ℹ️ <span data-i18n="howto_btn">How to play</span></button>
+    </div>
+    <p class="page-sub" data-i18n="mode_sub">Pick a table size to continue.</p>
+
+    <div class="mode-grid">
+      <div class="mode-card" data-mode="2" id="modeCard2">
+        <div class="mode-emoji">🧑‍🤝‍🧑</div>
+        <div class="mode-label" data-i18n="mode_2p">2 Players</div>
+        <div class="mode-note" data-i18n="mode_2p_note">Head to head, 32 cards</div>
+      </div>
+      <div class="mode-card" data-mode="4" id="modeCard4">
+        <div class="mode-emoji">👥</div>
+        <div class="mode-label" data-i18n="mode_4p">4 Players</div>
+        <div class="mode-note" data-i18n="mode_4p_note">2 teams, 52 cards</div>
+      </div>
+    </div>
+
+    <div class="play-options">
+      <div class="option-card">
+        <div class="option-title" data-i18n="opt_friends_title">🔗 Play with friends</div>
+        <div class="option-desc" data-i18n="opt_friends_desc">Create a table and share the link in Telegram.</div>
+        <button class="btn btn-primary btn-block" id="btnCreateInvite" data-i18n="opt_friends_btn">Create invite link</button>
+        <div class="invite-link-box" id="inviteBox" style="display:none;"></div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-title" data-i18n="opt_random_title">🎲 Play with strangers</div>
+        <div class="option-desc" data-i18n="opt_random_desc">Get matched automatically with online players.</div>
+        <button class="btn btn-secondary btn-block" id="btnRandom" data-i18n="opt_random_btn">Find a match</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Screen: Lobby / waiting ===== -->
+  <section class="screen" id="screen-lobby">
+    <h1 class="page-title" data-i18n="lobby_title">Waiting for players…</h1>
+    <p class="page-sub" id="lobbySub"><span class="pulse-dot"></span><span data-i18n="lobby_sub">Hang tight, we'll start as soon as the table is full.</span></p>
+    <div class="seats-row" id="seatsRow"></div>
+    <div class="invite-link-box" id="lobbyInviteBox" style="display:none;"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="btnCancelLobby" data-i18n="cancel">Cancel</button>
+    </div>
+
+    <!-- ===== Mini-games while waiting ===== -->
+    <div class="minigame-section">
+      <p class="minigame-heading" data-i18n="minigame_heading">Bored while you wait? Play something 👇</p>
+      <div class="minigame-tabs">
+        <button class="minigame-tab active" id="tabSnake" data-i18n="minigame_snake">🐍 Snake</button>
+        <button class="minigame-tab" id="tabDino" data-i18n="minigame_dino">🦖 Dino Run</button>
+      </div>
+      <div class="minigame-box">
+        <div class="minigame-score" id="minigameScore">0</div>
+        <canvas id="minigameCanvas" width="320" height="220"></canvas>
+        <div class="minigame-overlay" id="minigameOverlay">
+          <div id="minigameOverlayText" data-i18n="minigame_tap_start">Tap to start</div>
+        </div>
+      </div>
+      <p class="minigame-hint" id="minigameHint" data-i18n="minigame_hint_snake">Swipe or use arrow keys to move</p>
+    </div>
+  </section>
+
+  <!-- ===== Screen: Game table ===== -->
+  <section class="screen" id="screen-game">
+    <div class="table-wrap">
+      <div class="table-top-info">
+        <div id="scoreInfo">0 – 0</div>
+        <div class="trump-chip" id="trumpChip" style="display:none;">
+          <span class="suit-icon" id="trumpIcon">♠</span>
+          <span data-i18n="trump_label">Trump</span>
+        </div>
+      </div>
+
+      <div class="felt" id="felt">
+        <div class="opp-seats" id="oppSeats"></div>
+        <div class="trick-area mode4" id="trickArea"></div>
+
+        <!-- trump chooser overlay -->
+        <div id="trumpChooser" style="display:none; text-align:center;">
+          <div style="font-weight:800; margin-bottom:6px;" data-i18n="choose_trump_title">Choose the trump suit</div>
+          <div class="trump-choices">
+            <div class="trump-choice red" data-suit="hearts">♥</div>
+            <div class="trump-choice diamonds red" data-suit="diamonds">♦</div>
+            <div class="trump-choice black" data-suit="clubs">♣</div>
+            <div class="trump-choice black" data-suit="spades">♠</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="center-note" id="turnNote" data-i18n="turn_note_you">Your turn — play a card</div>
+
+      <div class="hand-strip" id="handStrip"></div>
+    </div>
+  </section>
+
+  <!-- ===== Screen: Hand / game over ===== -->
+  <section class="screen" id="screen-result">
+    <h1 class="page-title" id="resultTitle" data-i18n="hand_over_title">Hand over!</h1>
+    <p class="page-sub" id="resultSub"></p>
+    <button class="btn btn-primary btn-block" id="btnBackHub" data-i18n="back_to_hub">Back to Game Hub</button>
+  </section>
+
+  <!-- ===== Screen: Dice Duel game ===== -->
+  <section class="screen" id="screen-dice-game">
+    <div class="dice-wrap">
+      <div class="dice-score-row">
+        <div class="dice-player-chip" id="diceMeChip">
+          <div class="opp-avatar" id="diceMeAvatar">?</div>
+          <div id="diceMeName">You</div>
+          <div class="dice-wins" id="diceMeWins">0</div>
+        </div>
+        <div class="dice-round-label" id="diceRoundLabel">Round 1 / 3</div>
+        <div class="dice-player-chip" id="diceOppChip">
+          <div class="opp-avatar" id="diceOppAvatar">?</div>
+          <div id="diceOppName">Opponent</div>
+          <div class="dice-wins" id="diceOppWins">0</div>
+        </div>
+      </div>
+
+      <div class="dice-arena">
+        <div class="die-face" id="dieMe">?</div>
+        <div class="die-vs">vs</div>
+        <div class="die-face" id="dieOpp">?</div>
+      </div>
+
+      <div class="center-note" id="diceNote" data-i18n="dice_note_roll">Tap the button to roll!</div>
+
+      <button class="btn btn-primary btn-block" id="btnRollDice" data-i18n="dice_roll_btn">🎲 Roll the dice</button>
+
+      <div class="dice-history" id="diceHistory"></div>
+    </div>
+  </section>
+
+  <!-- ===== Screen: Dice Duel result ===== -->
+  <section class="screen" id="screen-dice-result">
+    <h1 class="page-title" id="diceResultTitle" data-i18n="dice_win_title">You win! 🎉</h1>
+    <p class="page-sub" id="diceResultSub"></p>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-block" id="btnDiceRematch" data-i18n="rematch">Rematch</button>
+    </div>
+    <button class="btn btn-ghost btn-block" id="btnDiceBackHub" data-i18n="back_to_hub">Back to Game Hub</button>
+  </section>
+
+</div>
+
+<!-- ===== How to Play modal ===== -->
+<div class="modal-overlay" id="howtoOverlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title" id="howtoTitle">How to play</div>
+      <button class="modal-close" id="howtoClose">✕</button>
+    </div>
+    <ol class="modal-steps" id="howtoSteps"></ol>
+  </div>
+</div>
+
+<!-- ===== Chat ===== -->
+<div class="chat-toggle" id="chatToggle" style="display:none;">💬</div>
+<div class="chat-panel" id="chatPanel">
+  <div style="font-weight:800;" data-i18n="chat_title">Table chat</div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" data-i18n-placeholder="chat_placeholder" placeholder="Type a message…" />
+    <button class="btn btn-primary" id="chatSend">➤</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // Set your bot's @username here so invite links work correctly.
+  window.BOT_USERNAME = "your_bot"; // e.g. "hokm_game_bot"
+</script>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="i18n.js"></script>
+<script src="minigames.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
