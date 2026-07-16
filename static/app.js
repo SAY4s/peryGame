@@ -205,7 +205,7 @@ async function createInvite(gameType, mode, inviteBoxId) {
   gameMode = data.mode;
   currentGameType = data.game_type;
 
-  const botUsername = window.BOT_USERNAME || "your_bot"; // set at deploy time
+  const botUsername = window.BOT_USERNAME || "@peryGamebot"; // set at deploy time
   const link = `https://t.me/${botUsername}/app?startapp=${roomId}`;
   const box = document.getElementById(inviteBoxId);
   box.style.display = "block";
