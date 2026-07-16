@@ -180,7 +180,13 @@ document.getElementById("modeCard4").addEventListener("click", () => selectMode(
 selectMode(4);
 
 // ===== Socket.io connection =====
-const socket = io();
+// BACKEND_URL lets this static frontend (e.g. on GitHub Pages) talk to a game server
+// hosted elsewhere. Falls back to same-origin if not set (useful for local dev where
+// server.py also serves the static files itself).
+const BACKEND_URL = (window.BACKEND_URL && window.BACKEND_URL !== "https://your-backend.example.com")
+  ? window.BACKEND_URL
+  : "";
+const socket = io(BACKEND_URL || undefined);
 let roomId = null;
 let mySeat = null;
 let gameMode = 4;
@@ -189,7 +195,7 @@ socket.on("connected", () => console.log("connected to server"));
 
 // --- create invite (play with friends) ---
 async function createInvite(gameType, mode, inviteBoxId) {
-  const res = await fetch("/api/create_invite", {
+  const res = await fetch(`${BACKEND_URL}/api/create_invite`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ game_type: gameType, mode }),

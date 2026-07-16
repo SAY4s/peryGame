@@ -275,7 +275,12 @@
 
 <script>
   // Set your bot's @username here so invite links work correctly.
-  window.BOT_USERNAME = "your_bot"; // e.g. "hokm_game_bot"
+  window.BOT_USERNAME = "@peryGamebot"; // e.g. "hokm_game_bot"
+
+  // This static site (e.g. hosted on GitHub Pages) cannot run the game server itself —
+  // GitHub Pages only serves static files, it can't run Python/WebSockets. Point this at
+  // wherever you deployed server.py (Render, Railway, a VPS, etc.), including the scheme:
+  window.BACKEND_URL = "https://say4s.github.io/peryGame/static/"; // no trailing slash
 </script>
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script src="i18n.js"></script>
