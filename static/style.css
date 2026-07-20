@@ -133,63 +133,77 @@ body[dir="rtl"] .user-chip { padding: 5px 5px 5px 12px; }
 .user-name { font-size: 13px; font-weight: 700; color: var(--ink); }
 
 /* ===== Section titles ===== */
-h1.page-title { font-size: 22px; font-weight: 800; margin: 4px 0 4px; letter-spacing: -0.01em; }
-p.page-sub { color: var(--ink-soft); font-size: 14px; margin: 0 0 18px; }
+h1.page-title { font-size: 19px; font-weight: 800; margin: 2px 0 3px; letter-spacing: -0.01em; }
+p.page-sub { color: var(--ink-soft); font-size: 12.5px; margin: 0 0 12px; }
 
 /* ===== Game hub cards ===== */
-.game-grid { display: flex; flex-direction: column; gap: 14px; }
+.game-grid { display: flex; flex-direction: column; gap: 8px; }
 
 .game-card {
   position: relative;
   background: var(--surface);
-  border-radius: var(--radius-lg);
-  padding: 18px;
+  border-radius: var(--radius-md);
+  padding: 10px 12px 10px 10px;
   box-shadow: var(--shadow-card);
   border: 1px solid var(--line);
-  display: flex; align-items: center; gap: 16px;
+  border-inline-start: 3px solid var(--card-accent, var(--primary));
+  display: flex; align-items: center; gap: 12px;
   cursor: pointer;
   transition: transform .15s ease, box-shadow .3s ease, background-color .3s ease, border-color .3s ease;
   overflow: hidden;
 }
+body[dir="rtl"] .game-card { padding: 10px 10px 10px 12px; }
 .game-card:active { transform: scale(0.98); }
 .game-card:hover { box-shadow: var(--shadow-soft); }
 
 .game-card.locked {
   cursor: default;
-  filter: grayscale(0.35);
-  opacity: 0.75;
+  opacity: 0.6;
+  --card-accent: var(--line);
 }
 .game-card.locked:active { transform: none; }
+.game-card.locked .game-icon { background: var(--surface-soft); color: var(--ink-soft); }
+
+.game-card.accent-hokm { --card-accent: #2f8fe0; }
+.game-card.accent-dice { --card-accent: #d7a642; }
 
 .game-icon {
-  width: 56px; height: 56px; border-radius: var(--radius-md);
-  background: linear-gradient(160deg, var(--primary-tint), #ffffff);
+  position: relative;
+  width: 42px; height: 42px; border-radius: 12px;
+  background: linear-gradient(155deg, var(--card-accent, var(--primary-tint)) 0%, var(--primary-tint) 130%);
   display: flex; align-items: center; justify-content: center;
-  font-size: 26px;
+  font-size: 20px; color: white;
   flex-shrink: 0;
 }
+.game-icon .corner-index {
+  position: absolute; top: 2px; inset-inline-start: 4px;
+  font-size: 8.5px; font-weight: 800; letter-spacing: -0.02em;
+  color: rgba(255,255,255,0.85);
+}
 
-.game-info { flex: 1; }
-.game-title { font-weight: 800; font-size: 16px; margin-bottom: 2px; }
-.game-desc { font-size: 12.5px; color: var(--ink-soft); }
+.game-info { flex: 1; min-width: 0; }
+.game-title-row { display: flex; align-items: center; gap: 6px; }
+.game-title { font-weight: 800; font-size: 14.5px; }
+.game-desc {
+  font-size: 11.5px; color: var(--ink-soft);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: block; max-width: 100%;
+}
 
 .badge {
-  position: absolute; top: 12px;
-  inset-inline-end: 12px;
-  font-size: 10.5px; font-weight: 800;
-  padding: 4px 9px; border-radius: 999px;
+  flex-shrink: 0;
+  font-size: 9.5px; font-weight: 800;
+  padding: 3px 8px; border-radius: 999px;
   background: var(--primary-tint); color: var(--primary-dark);
   text-transform: uppercase; letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 .badge.soon { background: var(--surface-soft); color: var(--ink-soft); }
 
-/* fanned suit motif on the active card */
-.suit-fan {
-  position: absolute; inset-inline-end: -10px; bottom: -14px;
-  font-size: 64px; opacity: 0.07; transform: rotate(-12deg);
-  color: var(--primary-dark);
-  pointer-events: none;
+.game-chevron {
+  flex-shrink: 0; font-size: 14px; color: var(--ink-soft); opacity: 0.5;
 }
+body[dir="rtl"] .game-chevron { transform: scaleX(-1); }
 
 /* ===== Buttons ===== */
 .btn {
