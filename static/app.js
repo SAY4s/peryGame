@@ -179,33 +179,29 @@ document.getElementById("modeCard2").addEventListener("click", () => selectMode(
 document.getElementById("modeCard4").addEventListener("click", () => selectMode(4));
 selectMode(4);
 
-// ===== Socket.io connection =====
-// BACKEND_URL lets this static frontend (e.g. on GitHub Pages) talk to a game server
-// hosted elsewhere. Falls back to same-origin if not set (useful for local dev where
-// server.py also serves the static files itself).
-const BACKEND_URL = (window.BACKEND_URL && window.BACKEND_URL !== "https://your-backend.example.com")
-  ? window.BACKEND_URL
-  : "";
-const socket = io(BACKEND_URL || undefined);
+// ===== Serverless networking (Firebase-backed, see serverless-net.js) =====
 let roomId = null;
 let mySeat = null;
 let gameMode = 4;
 
-socket.on("connected", () => console.log("connected to server"));
+net.on("connected", () => console.log("connected (serverless net ready)"));
 
 // --- create invite (play with friends) ---
 async function createInvite(gameType, mode, inviteBoxId) {
-  const res = await fetch(`${BACKEND_URL}/api/create_invite`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ game_type: gameType, mode }),
-  });
-  const data = await res.json();
+  let data;
+  try {
+    data = await net.createInvite(gameType, mode);
+  } catch (e) {
+    toast(e.message === "firebase_not_configured"
+      ? "Firebase isn't configured yet — see index.html"
+      : e.message);
+    return;
+  }
   roomId = data.room_id;
   gameMode = data.mode;
   currentGameType = data.game_type;
 
-  const botUsername = window.BOT_USERNAME || "@peryGamebot"; // set at deploy time
+  const botUsername = window.BOT_USERNAME || "your_bot"; // set at deploy time
   const link = `https://t.me/${botUsername}/app?startapp=${roomId}`;
   const box = document.getElementById(inviteBoxId);
   box.style.display = "block";
@@ -227,7 +223,7 @@ document.getElementById("btnCreateInviteDice").addEventListener("click", () => {
 document.getElementById("btnRandom").addEventListener("click", () => {
   currentGameType = "hokm";
   gameMode = selectedMode;
-  socket.emit("join_random", {
+  net.emit("join_random", {
     game_type: "hokm",
     mode: selectedMode,
     user_id: tgUser.id,
@@ -239,7 +235,7 @@ document.getElementById("btnRandom").addEventListener("click", () => {
 document.getElementById("btnRandomDice").addEventListener("click", () => {
   currentGameType = "dice";
   gameMode = 2;
-  socket.emit("join_random", {
+  net.emit("join_random", {
     game_type: "dice",
     mode: 2,
     user_id: tgUser.id,
@@ -249,7 +245,7 @@ document.getElementById("btnRandomDice").addEventListener("click", () => {
 });
 
 function joinRoom(id) {
-  socket.emit("join_by_code", {
+  net.emit("join_by_code", {
     room_id: id,
     user_id: tgUser.id,
     name: tgUser.first_name || "Player",
@@ -293,22 +289,22 @@ document.getElementById("btnCancelLobby").addEventListener("click", () => {
   showScreen(currentGameType === "dice" ? "screen-dice-options" : "screen-mode");
 });
 
-socket.on("joined", (data) => {
+net.on("joined", (data) => {
   roomId = data.room_id;
   mySeat = data.seat;
   gameMode = data.mode;
   currentGameType = data.game_type || currentGameType;
 });
 
-socket.on("lobby_update", (data) => {
+net.on("lobby_update", (data) => {
   showLobby(data.mode, data.players.length);
 });
 
-socket.on("queued", () => {
+net.on("queued", () => {
   // waiting for match
 });
 
-socket.on("error_msg", (data) => {
+net.on("error_msg", (data) => {
   toast(data.message);
 });
 
@@ -326,7 +322,7 @@ function rankLabel(rank) {
 
 let latestState = null;
 
-socket.on("game_state", (state) => {
+net.on("game_state", (state) => {
   latestState = state;
   currentGameType = state.game_type || currentGameType;
   stopMiniGames();
@@ -419,7 +415,7 @@ function renderGame(state) {
       el.classList.add(legalIds.has(id) ? "playable" : "disabled");
       el.addEventListener("click", () => {
         if (!legalIds.has(id)) return;
-        socket.emit("play_card", { suit: c.suit, rank: c.rank });
+        net.emit("play_card", { suit: c.suit, rank: c.rank });
       });
     }
     handStrip.appendChild(el);
@@ -444,7 +440,7 @@ function makeCardEl(suit, rank, extraClass) {
 // trump choice clicks
 document.querySelectorAll(".trump-choice").forEach((el) => {
   el.addEventListener("click", () => {
-    socket.emit("choose_trump", { suit: el.getAttribute("data-suit") });
+    net.emit("choose_trump", { suit: el.getAttribute("data-suit") });
   });
 });
 
@@ -527,11 +523,11 @@ function renderDice(state) {
 }
 
 document.getElementById("btnRollDice").addEventListener("click", () => {
-  socket.emit("roll_dice", {});
+  net.emit("roll_dice", {});
 });
 
 document.getElementById("btnDiceRematch").addEventListener("click", () => {
-  socket.emit("rematch_dice", {});
+  net.emit("rematch_dice", {});
 });
 
 document.getElementById("btnDiceBackHub").addEventListener("click", () => {
@@ -553,10 +549,10 @@ function sendChat() {
   const input = document.getElementById("chatInput");
   const text = input.value.trim();
   if (!text) return;
-  socket.emit("chat_message", { text });
+  net.emit("chat_message", { text });
   input.value = "";
 }
-socket.on("chat_message", (data) => {
+net.on("chat_message", (data) => {
   const box = document.getElementById("chatMessages");
   const bubble = document.createElement("div");
   bubble.className = "chat-bubble" + (data.seat === mySeat ? " me" : "");

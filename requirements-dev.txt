@@ -1,0 +1,4 @@
+# Only needed to run test_multiplayer.py (not required to run the bot/server itself)
+requests==2.32.3
+websocket-client==1.8.0
+python-socketio[client]==5.11.3

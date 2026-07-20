@@ -13,13 +13,20 @@ import os
 import uuid
 import time
 from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 from flask_socketio import SocketIO, join_room, leave_room, emit
 
 from game_logic import HokmGame
 from dice_logic import DiceGame
 
 app = Flask(__name__, static_folder="static", static_url_path="")
-socketio = SocketIO(app, cors_allowed_origins="*")
+# Allows the static frontend, when hosted elsewhere (e.g. GitHub Pages), to call
+# /api/create_invite on this backend cross-origin. Socket.IO's own CORS is handled
+# separately below via cors_allowed_origins.
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+# async_mode="threading" avoids relying on eventlet/gevent, which currently break on
+# newer Python versions (e.g. Python 3.13 on Windows). Works fine for this app's scale.
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 
 # ---- in-memory storage (swap for a real DB in production) ----
 rooms = {}                          # room_id -> game object (HokmGame | DiceGame)
@@ -247,4 +254,4 @@ def on_chat_message(data):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    socketio.run(app, host="0.0.0.0", port=port, debug=True)
+    socketio.run(app, host="0.0.0.0", port=port, debug=True, allow_unsafe_werkzeug=True)

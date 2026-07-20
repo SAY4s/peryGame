@@ -275,14 +275,29 @@
 
 <script>
   // Set your bot's @username here so invite links work correctly.
-  window.BOT_USERNAME = "@peryGamebot"; // e.g. "hokm_game_bot"
+  window.BOT_USERNAME = "your_bot"; // e.g. "hokm_game_bot"
 
-  // This static site (e.g. hosted on GitHub Pages) cannot run the game server itself —
-  // GitHub Pages only serves static files, it can't run Python/WebSockets. Point this at
-  // wherever you deployed server.py (Render, Railway, a VPS, etc.), including the scheme:
-  window.BACKEND_URL = "https://say4s.github.io/peryGame/static/"; // no trailing slash
+  // This site is fully serverless: there's no backend to host anywhere. Real-time state
+  // is synced directly between players' browsers via Firebase Firestore (free tier).
+  // Create a free project at https://console.firebase.google.com, enable Firestore
+  // (in "test mode" or with the rules from README) and Anonymous Authentication, then
+  // paste your project's config below (Project settings → General → Your apps → SDK
+  // setup and configuration → Config).
+  window.FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDe4WeoNvmghLQ130xDPxHqkhlt2kZGsM8",
+    authDomain: "hokm-app-8df25.firebaseapp.com",
+    projectId: "hokm-app-8df25",
+    storageBucket: "hokm-app-8df25.firebasestorage.app",
+    messagingSenderId: "222261235317",
+    appId: "1:222261235317:web:b9683909f0ae086304f23c",
+  };
 </script>
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="hokm-engine.js"></script>
+<script src="dice-engine.js"></script>
+<script src="serverless-net.js"></script>
 <script src="i18n.js"></script>
 <script src="minigames.js"></script>
 <script src="app.js"></script>
