@@ -276,8 +276,12 @@
 
 <!-- ===== Chat ===== -->
 <div class="chat-toggle" id="chatToggle" style="display:none;">💬</div>
+<div class="chat-backdrop" id="chatBackdrop"></div>
 <div class="chat-panel" id="chatPanel">
-  <div style="font-weight:800;" data-i18n="chat_title">Table chat</div>
+  <div class="chat-panel-header">
+    <div class="chat-panel-title" data-i18n="chat_title">Table chat</div>
+    <button class="chat-close" id="chatClose" aria-label="Close">✕</button>
+  </div>
   <div class="chat-messages" id="chatMessages"></div>
   <div class="chat-input-row">
     <input type="text" id="chatInput" data-i18n-placeholder="chat_placeholder" placeholder="Type a message…" />

@@ -396,7 +396,7 @@ function renderGame(state) {
     note.textContent = "";
   }
 
-  // hand
+  // hand — sorted like you'd naturally arrange a real hand, then fanned out
   const handStrip = document.getElementById("handStrip");
   handStrip.innerHTML = "";
   const isMyTurn = state.phase === "playing" && state.turn_seat === state.your_seat;
@@ -408,9 +408,21 @@ function renderGame(state) {
     legal.forEach((c) => legalIds.add(c.suit + "_" + c.rank));
   }
 
-  state.your_hand.forEach((c) => {
+  const suitOrder = ["hearts", "diamonds", "clubs", "spades"];
+  const sortedHand = state.your_hand.slice().sort((a, b) =>
+    suitOrder.indexOf(a.suit) - suitOrder.indexOf(b.suit) || a.rank - b.rank
+  );
+
+  const n = sortedHand.length;
+  const maxSpread = Math.min(70, n * 5); // degrees, total fan width
+  const step = n > 1 ? maxSpread / (n - 1) : 0;
+
+  sortedHand.forEach((c, i) => {
     const el = makeCardEl(c.suit, c.rank, "hand-card");
     const id = c.suit + "_" + c.rank;
+    const angle = -maxSpread / 2 + i * step;
+    el.style.setProperty("--rot", `${angle}deg`);
+    el.style.zIndex = String(i);
     if (isMyTurn) {
       el.classList.add(legalIds.has(id) ? "playable" : "disabled");
       el.addEventListener("click", () => {
@@ -448,6 +460,7 @@ document.getElementById("btnBackHub").addEventListener("click", () => {
   showScreen("screen-hub");
   document.getElementById("chatToggle").style.display = "none";
   document.getElementById("inviteBox").style.display = "none";
+  closeChat();
 });
 
 // ===== Dice Duel =====
@@ -534,13 +547,28 @@ document.getElementById("btnDiceBackHub").addEventListener("click", () => {
   showScreen("screen-hub");
   document.getElementById("chatToggle").style.display = "none";
   document.getElementById("inviteBoxDice").style.display = "none";
+  closeChat();
 });
 
 // ===== Chat =====
 const chatPanel = document.getElementById("chatPanel");
+const chatBackdrop = document.getElementById("chatBackdrop");
+
+function openChat() {
+  chatPanel.classList.add("open");
+  chatBackdrop.classList.add("show");
+}
+function closeChat() {
+  chatPanel.classList.remove("open");
+  chatBackdrop.classList.remove("show");
+}
+
 document.getElementById("chatToggle").addEventListener("click", () => {
-  chatPanel.classList.toggle("open");
+  chatPanel.classList.contains("open") ? closeChat() : openChat();
 });
+document.getElementById("chatClose").addEventListener("click", closeChat);
+chatBackdrop.addEventListener("click", closeChat);
+
 document.getElementById("chatSend").addEventListener("click", sendChat);
 document.getElementById("chatInput").addEventListener("keydown", (e) => {
   if (e.key === "Enter") sendChat();
