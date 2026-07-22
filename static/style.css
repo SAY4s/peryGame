@@ -356,10 +356,22 @@ body[dir="rtl"] .game-chevron { transform: scaleX(-1); }
   background: var(--surface); border-radius: 10px 10px 8px 8px;
   border: 1.5px solid var(--line);
   box-shadow: var(--shadow-card);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 16px;
+  display: block;
   cursor: pointer;
   transition: transform .15s ease, border-color .12s ease, background-color .3s ease, box-shadow .15s ease;
+}
+/* Corner index, like a real card — deliberately NOT centered: the top of the card is
+   where the fan spreads cards furthest apart, so this is what stays readable even when
+   most of the card is covered by its neighbors. Always top-LEFT regardless of page
+   direction — a card face doesn't mirror for RTL. */
+.hand-card > div:first-child {
+  position: absolute; top: 4px; left: 6px;
+  font-size: 15px; font-weight: 800; line-height: 1;
+  text-align: left;
+}
+.hand-card .suit-icon {
+  position: absolute; top: 21px; left: 6px;
+  font-size: 12px; line-height: 1;
 }
 .hand-card.playable:hover,
 .hand-card.playable:active {
@@ -370,6 +382,12 @@ body[dir="rtl"] .game-chevron { transform: scaleX(-1); }
 .hand-card.disabled { opacity: 0.45; cursor: not-allowed; }
 .hand-card.red { color: var(--danger); }
 .hand-card.black { color: var(--ink); }
+.hand-card::after {
+  content: attr(data-suit-icon);
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; opacity: 0.12; color: inherit; pointer-events: none;
+}
 
 /* trump chooser */
 .trump-choices { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }

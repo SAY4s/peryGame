@@ -414,7 +414,7 @@ function renderGame(state) {
   );
 
   const n = sortedHand.length;
-  const maxSpread = Math.min(70, n * 5); // degrees, total fan width
+  const maxSpread = Math.min(110, n * 7.5); // degrees, total fan width
   const step = n > 1 ? maxSpread / (n - 1) : 0;
 
   sortedHand.forEach((c, i) => {
@@ -445,6 +445,7 @@ function renderGame(state) {
 function makeCardEl(suit, rank, extraClass) {
   const el = document.createElement("div");
   el.className = (extraClass || "playing-card") + " " + (RED_SUITS.has(suit) ? "red" : "black");
+  el.dataset.suitIcon = SUIT_ICON[suit];
   el.innerHTML = `<div>${rankLabel(rank)}</div><div class="suit-icon">${SUIT_ICON[suit]}</div>`;
   return el;
 }
