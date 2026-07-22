@@ -340,7 +340,7 @@ body[dir="rtl"] .game-chevron { transform: scaleX(-1); }
 
 .hand-strip {
   position: relative;
-  height: 128px;
+  height: 168px;
   margin-top: 6px;
   /* every card is anchored at this same bottom-center point, then rotated —
      exactly how a real fanned hand of cards works */
@@ -348,12 +348,12 @@ body[dir="rtl"] .game-chevron { transform: scaleX(-1); }
 
 .hand-card {
   position: absolute;
-  bottom: 6px; left: 50%;
-  width: 52px; height: 76px;
-  margin-left: -26px; /* half width, so rotation pivots around bottom-center */
+  bottom: 8px; left: 50%;
+  width: 68px; height: 100px;
+  margin-left: -34px; /* half width, so rotation pivots around bottom-center */
   transform-origin: 50% 100%;
   transform: rotate(var(--rot, 0deg));
-  background: var(--surface); border-radius: 10px 10px 8px 8px;
+  background: var(--surface); border-radius: 12px 12px 9px 9px;
   border: 1.5px solid var(--line);
   box-shadow: var(--shadow-card);
   display: block;
@@ -365,17 +365,17 @@ body[dir="rtl"] .game-chevron { transform: scaleX(-1); }
    most of the card is covered by its neighbors. Always top-LEFT regardless of page
    direction — a card face doesn't mirror for RTL. */
 .hand-card > div:first-child {
-  position: absolute; top: 4px; left: 6px;
-  font-size: 15px; font-weight: 800; line-height: 1;
+  position: absolute; top: 6px; left: 8px;
+  font-size: 19px; font-weight: 800; line-height: 1;
   text-align: left;
 }
 .hand-card .suit-icon {
-  position: absolute; top: 21px; left: 6px;
-  font-size: 12px; line-height: 1;
+  position: absolute; top: 28px; left: 8px;
+  font-size: 15px; line-height: 1;
 }
 .hand-card.playable:hover,
 .hand-card.playable:active {
-  transform: rotate(var(--rot, 0deg)) translateY(-18px);
+  transform: rotate(var(--rot, 0deg)) translateY(-22px);
   box-shadow: var(--shadow-soft);
 }
 .hand-card.playable { border-color: var(--primary); }
@@ -386,7 +386,7 @@ body[dir="rtl"] .game-chevron { transform: scaleX(-1); }
   content: attr(data-suit-icon);
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 26px; opacity: 0.12; color: inherit; pointer-events: none;
+  font-size: 34px; opacity: 0.12; color: inherit; pointer-events: none;
 }
 
 /* trump chooser */
