@@ -414,7 +414,7 @@ function renderGame(state) {
   );
 
   const n = sortedHand.length;
-  const maxSpread = Math.min(110, n * 7.5); // degrees, total fan width
+  const maxSpread = Math.min(160, n * 22.5); // degrees, total fan width — 3x the previous spacing
   const step = n > 1 ? maxSpread / (n - 1) : 0;
 
   sortedHand.forEach((c, i) => {
